@@ -1,0 +1,34 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "S3BackupRestorePermissions",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:GetBucketVersioning",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": [
+                "arn:aws:s3:::your-secure-backup-bucket-name",
+                "arn:aws:s3:::your-secure-backup-bucket-name/*"
+            ]
+        },
+        {
+            "Sid": "CloudWatchLoggingPermissions",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams"
+            ],
+            "Resource": [
+                "arn:aws:logs:*:*:log-group:/aws/ec2/backup-restore:*",
+                "arn:aws:logs:*:*:log-group:/aws/ec2/backup-restore"
+            ]
+        }
+    ]
+}
