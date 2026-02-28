@@ -6,9 +6,27 @@
 A production-ready cloud automation project to securely backup data from an Amazon EC2 instance to an S3 bucket and perform restores. This solution removes the need for hardcoded AWS credentials by utilizing IAM Roles, implements least privilege security, enables bucket versioning for accidental deletion protection, and uses cron jobs for automated daily backups.
 
 ## 🏗️ Architecture Diagram
-<div align="center">
-  <img src="architecture/architecture-diagram.png" alt="Architecture Diagram" width="800"/>
-</div>
+
+```mermaid
+graph LR
+    subgraph AWS Cloud
+        EC2[Amazon EC2 Instance<br/>Running Bash Scripts]
+        IAM[IAM Role<br/>Auto-assigned Credentials]
+        S3[(Amazon S3 Bucket<br/>Versioned & Encrypted)]
+        CW[CloudWatch Logs<br/>Centralized Logging]
+    end
+    
+    Cron[Cron Job<br/>Daily Triggers] --> EC2
+    EC2 -->|Assumes| IAM
+    IAM -.->|Grants Pass-through Auth| EC2
+    EC2 -->|Uploads Tarballs| S3
+    EC2 -->|Pushes Log Streams| CW
+    
+    classDef aws fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:white;
+    classDef external fill:#232F3E,stroke:#FF9900,stroke-width:2px,color:white;
+    class EC2,IAM,S3,CW aws;
+    class Cron external;
+```
 
 ### Architecture Components
 1. **Amazon EC2 (Amazon Linux 2/2023)**: Hosts the application/data and runs the backup shell scripts. 
